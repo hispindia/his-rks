@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.rks.model">
+
+	<class name="Category" table="rks_category" batch-size="500">
+
+		<id name="id" type="int" column="id" unsaved-value="0">
+				<generator class="native" />
+		</id>
+		<property name="name" column="name" />
+		<property name="description" column="description" length="500" />
+		<property name="createdOn" column="created_on"  />
+		<property name="createdBy" column="created_by" length="255" />
+		<property name="retired" column="retired"  />
+		<many-to-one name="parent" class="org.openmrs.module.rks.model.Category"
+	        column="parent_id"  lazy="false" />	 
+	    <set name="subCategories"  table="rks_category" cascade="save-update,merge,evict" >
+	      <key column="parent_id"/>
+	      <one-to-many class="org.openmrs.module.rks.model.Category"/>
+	    </set>    
+	</class>
+</hibernate-mapping>
