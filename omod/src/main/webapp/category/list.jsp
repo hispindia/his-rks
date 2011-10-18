@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 
-<openmrs:require privilege="View category" otherwise="/login.htm" redirect="/module/rks/listCategory.form" />
+<openmrs:require privilege="View RKS" otherwise="/login.htm" redirect="/module/rks/listCategory.form" />
 
 <spring:message var="pageTitle" code="rks.category.manage" scope="page"/>
 
@@ -35,7 +35,6 @@
 	<th>#</th>
 	<th><spring:message code="general.name"/></th>
 	<th><spring:message code="rks.category.description"/></th>
-	<th><spring:message code="rks.category.parent"/></th>
 	<th><spring:message code="rks.category.retired"/></th>
 	<th><spring:message code="rks.category.createdOn"/></th>
 	<th><spring:message code="rks.category.createdBy"/></th>
@@ -46,7 +45,6 @@
 		<td><c:out value="${(( pagingUtil.currentPage - 1  ) * pagingUtil.pageSize ) + varStatus.count }"/></td>	
 		<td><a href="#" onclick="ACT.go('category.form?categoryId=${ category.id}');">${category.name}</a> </td>
 		<td>${category.description}</td>
-		<td>${category.parent.name}</td>
 		<td>${category.retired}</td>
 		<td><openmrs:formatDate date="${category.createdOn}" type="textbox"/></td>
 		<td>${category.createdBy}</td>

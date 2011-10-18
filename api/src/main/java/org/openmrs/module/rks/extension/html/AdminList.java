@@ -54,7 +54,7 @@ public class AdminList extends AdministrationSectionExt {
 		//commit new ne
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("module/rks/categoryList.form", "rks.category.manage");
-		map.put("module/rks/categoryMoneyList.form", "rks.categoryMoney.manage");
+		map.put("module/rks/itemList.form", "rks.item.manage");
 		return map;
 	}
 	

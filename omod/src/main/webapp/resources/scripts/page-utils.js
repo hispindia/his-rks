@@ -19,14 +19,14 @@ RKS={
 		search : function(url, value){
 			ACT.go(url+"?"+value+"="+jQuery("#"+value).val());
 		},
-		searchCategoryMoney : function(thiz)
+		searchItem : function(thiz)
 		{
 			var categoryId = jQuery("#categoryId").val();
 			var fromDate = jQuery("#fromDate").val();
 			var toDate = jQuery("#toDate").val();
 			var transactionType = jQuery("#transactionType").val();
 			var searchName = jQuery("#searchName").val();
-			ACT.go("categoryMoneyList.form?fromDate="+fromDate+"&toDate="+toDate+"&categoryId="+categoryId+"&transactionType="+transactionType+"&searchName="+searchName);
+			ACT.go("itemList.form?fromDate="+fromDate+"&toDate="+toDate+"&categoryId="+categoryId+"&transactionType="+transactionType+"&searchName="+searchName);
 		},
 		exportData : function(thiz)
 		{
@@ -35,7 +35,7 @@ RKS={
 			var toDate = jQuery("#toDate").val();
 			var transactionType = jQuery("#transactionType").val();
 			var searchName = jQuery("#searchName").val();
-			ACT.go("categoryMoneyExport.form?categoryId="+categoryId+"&fromDate="+fromDate+"&toDate="+toDate+"&transactionType="+transactionType+"&searchName="+searchName);
+			ACT.go("itemExport.form?categoryId="+categoryId+"&fromDate="+fromDate+"&toDate="+toDate+"&transactionType="+transactionType+"&searchName="+searchName);
 		}
 		
 };

@@ -21,6 +21,7 @@
 package org.openmrs.module.rks.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -28,28 +29,25 @@ import java.util.Date;
  * @author cht
  *
  */
-public class Category implements  Serializable {
-
+public class Item implements  Serializable {
 	
-	 private static final long serialVersionUID = 1L;
+	  public static final String[] TRANSACTION_NAMES = {"Income sources", "Expenditure sources" };
+	  
+	  private static final long serialVersionUID = 1L;
 	  private Integer id;
-	  private String name;
-	  private String description;
 	  private Date createdOn;
 	  private String createdBy;
 	  private Boolean retired = false;
-
+	  private Category category;
+	  private String transactionType;
+	  private String description;
+	  private Date dateIncomeOutcome;
+	  private BigDecimal amount;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
 	}
 	public Date getCreatedOn() {
 		return createdOn;
@@ -70,12 +68,37 @@ public class Category implements  Serializable {
 		this.retired = retired;
 	}
 	
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+	public String getTransactionType() {
+		return transactionType;
+	}
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public Date getDateIncomeOutcome() {
+		return dateIncomeOutcome;
+	}
+	public void setDateIncomeOutcome(Date dateIncomeOutcome) {
+		this.dateIncomeOutcome = dateIncomeOutcome;
+	}
+	public BigDecimal getAmount() {
+		return amount;
+	}
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+	  
 	  
 	  
 }

@@ -35,7 +35,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.rks.db.RKSDAO;
 import org.openmrs.module.rks.model.Category;
-import org.openmrs.module.rks.model.CategoryMoney;
+import org.openmrs.module.rks.model.Item;
 
 public class HibernateRKSDAO implements RKSDAO {
 	SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -59,18 +59,12 @@ public class HibernateRKSDAO implements RKSDAO {
 	/**
 	 * Category
 	 */
-	public List<Category> listCategory(String name,Boolean parent,int min, int max) throws DAOException{
+	public List<Category> listCategory(String name,int min, int max) throws DAOException{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Category.class, "category");
 		if(StringUtils.isNotBlank(name)){
 			criteria.add(Restrictions.like("category.name", "%"+name+"%"));
 		}
-		if(parent != null ){
-			if(parent){
-				criteria.add(Restrictions.isNull("category.parent"));
-			}else{
-				criteria.add(Restrictions.isNotNull("category.parent"));
-			}
-		}
+		
 		if(max > 0){
 			criteria.setFirstResult(min).setMaxResults(max);
 		}
@@ -83,18 +77,12 @@ public class HibernateRKSDAO implements RKSDAO {
 		return (Category) sessionFactory.getCurrentSession().merge(category); 
 	}
 
-	public int countListCategory(String name,Boolean parent)  throws DAOException{
+	public int countListCategory(String name)  throws DAOException{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Category.class, "category");
 		if(StringUtils.isNotBlank(name)){
 			criteria.add(Restrictions.like("category.name", "%"+name+"%"));
 		}
-		if(parent != null ){
-			if(parent){
-				criteria.add(Restrictions.isNull("category.parent"));
-			}else{
-				criteria.add(Restrictions.isNotNull("category.parent"));
-			}
-		}
+		
 		Number rs =  (Number) criteria.setProjection( Projections.rowCount() ).uniqueResult();
 		return rs != null ? rs.intValue() : 0;
 	}
@@ -107,45 +95,43 @@ public class HibernateRKSDAO implements RKSDAO {
 		sessionFactory.getCurrentSession().delete(getCategoryById(id));
 	}
 	
-	public Category getCategoryByName(String name,Category parent) throws DAOException{
+	public Category getCategoryByName(String name) throws DAOException{
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Category.class, "category");
 		if(StringUtils.isNotBlank(name)){
 			criteria.add(Restrictions.eq("category.name",name));
 		}
-		if(parent != null){
-			criteria.add(Restrictions.eq("category.parent.id",parent.getId()));
-		}
+		
 		criteria.setMaxResults(1);
 		List<Category> list= criteria.list();
 		return  CollectionUtils.isEmpty(list)? null : list.get(0);
 	}
 	
 	/**
-	 * CategoryMoney
+	 * Item
 	 */
-	public List<CategoryMoney> listCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws DAOException{
+	public List<Item> listItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws DAOException{
 		
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CategoryMoney.class, "categoryMoney")
-				.createAlias("categoryMoney.subCategory", "category");
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Item.class, "item")
+				.createAlias("item.category", "category");
 		if(category != null && category > 0){
-			criteria.add(Restrictions.eq("category.parent.id" ,category));
+			criteria.add(Restrictions.eq("category.id" ,category));
 		}
 		if(StringUtils.isNotBlank(searchName)){
-			criteria.add(Restrictions.or(Restrictions.like("category.name", "%"+searchName+"%"), Restrictions.like("categoryMoney.description", "%"+searchName+"%")));
+			criteria.add(Restrictions.or(Restrictions.like("category.name", "%"+searchName+"%"), Restrictions.like("item.description", "%"+searchName+"%")));
 		}
 		if(StringUtils.isNotBlank(transactionType)){
-			criteria.add(Restrictions.eq("categoryMoney.transactionType",transactionType));
+			criteria.add(Restrictions.eq("item.transactionType",transactionType));
 		}
 		if (!StringUtils.isBlank(fromDateIncomeOutcome) && StringUtils.isBlank(toDateIncomeOutcome)) {
 			String startFromDate = fromDateIncomeOutcome + " 00:00:00";
 			String endFromDate = fromDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endFromDate))));
+						"item.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endFromDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		} 
@@ -154,11 +140,11 @@ public class HibernateRKSDAO implements RKSDAO {
 			String endToDate = toDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endToDate))));
+						"item.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endToDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		} 
@@ -167,11 +153,11 @@ public class HibernateRKSDAO implements RKSDAO {
 			String endToDate = toDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endToDate))));
+						"item.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endToDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		}
@@ -179,37 +165,37 @@ public class HibernateRKSDAO implements RKSDAO {
 		if(max > 0){
 			criteria.setFirstResult(min).setMaxResults(max);
 		}
-		List<CategoryMoney> l = criteria.list();
+		List<Item> l = criteria.list();
 		
 		return l;
 	}
 	
-	public CategoryMoney saveCategoryMoney(CategoryMoney categoryMoney) throws DAOException{
-		return (CategoryMoney) sessionFactory.getCurrentSession().merge(categoryMoney); 
+	public Item saveItem(Item item) throws DAOException{
+		return (Item) sessionFactory.getCurrentSession().merge(item); 
 	}
 
-	public int countListCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws DAOException{
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CategoryMoney.class, "categoryMoney")
-				.createAlias("categoryMoney.subCategory", "category");
+	public int countListItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws DAOException{
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Item.class, "item")
+				.createAlias("item.category", "category");
 		if(category != null && category > 0){
-			criteria.add(Restrictions.eq("category.parent.id" ,category));
+			criteria.add(Restrictions.eq("category.id" ,category));
 		}
 		if(StringUtils.isNotBlank(searchName)){
-			criteria.add(Restrictions.or(Restrictions.like("category.name", "%"+searchName+"%"), Restrictions.like("categoryMoney.description", "%"+searchName+"%")));
+			criteria.add(Restrictions.or(Restrictions.like("category.name", "%"+searchName+"%"), Restrictions.like("item.description", "%"+searchName+"%")));
 		}
 		if(StringUtils.isNotBlank(transactionType)){
-			criteria.add(Restrictions.eq("categoryMoney.transactionType",transactionType));
+			criteria.add(Restrictions.eq("item.transactionType",transactionType));
 		}
 		if (!StringUtils.isBlank(fromDateIncomeOutcome) && StringUtils.isBlank(toDateIncomeOutcome)) {
 			String startFromDate = fromDateIncomeOutcome + " 00:00:00";
 			String endFromDate = fromDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endFromDate))));
+						"item.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endFromDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		} 
@@ -218,11 +204,11 @@ public class HibernateRKSDAO implements RKSDAO {
 			String endToDate = toDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endToDate))));
+						"item.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endToDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		} 
@@ -231,11 +217,11 @@ public class HibernateRKSDAO implements RKSDAO {
 			String endToDate = toDateIncomeOutcome + " 23:59:59";
 			try {
 				criteria.add(Restrictions.and(Restrictions.ge(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
-						"categoryMoney.dateIncomeOutcome", formatter.parse(endToDate))));
+						"item.dateIncomeOutcome", formatter.parse(startToDate)), Restrictions.le(
+						"item.dateIncomeOutcome", formatter.parse(endToDate))));
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("countListCategoryMoney>>Error convert date: "+ e.toString());
+				System.out.println("countListItem>>Error convert date: "+ e.toString());
 				e.printStackTrace();
 			}
 		}
@@ -244,31 +230,31 @@ public class HibernateRKSDAO implements RKSDAO {
 		return rs != null ? rs.intValue() : 0;
 	}
 	
-	public CategoryMoney getCategoryMoneyById(Integer id) throws DAOException{
-		return (CategoryMoney) sessionFactory.getCurrentSession().get(CategoryMoney.class, id); 
+	public Item getItemById(Integer id) throws DAOException{
+		return (Item) sessionFactory.getCurrentSession().get(Item.class, id); 
 	}
 		
-	public void deleteCategoryMoney(Integer id) throws DAOException{
-		sessionFactory.getCurrentSession().delete(getCategoryMoneyById(id));
+	public void deleteItem(Integer id) throws DAOException{
+		sessionFactory.getCurrentSession().delete(getItemById(id));
 	}
 
 	@Override
-	public CategoryMoney getCategoryMoney(Integer subCategoryId,
+	public Item getItem(Integer subCategoryId,
 			String transactionType, Date dateIncomeOutcome) throws DAOException {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CategoryMoney.class, "categoryMoney");
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Item.class, "item");
 		if(subCategoryId != null && subCategoryId > 0){
-			criteria.add(Restrictions.eq("categoryMoney.subCategory.id", subCategoryId));
+			criteria.add(Restrictions.eq("item.category.id", subCategoryId));
 		}
 		if(StringUtils.isNotBlank(transactionType)){
-			criteria.add(Restrictions.eq("categoryMoney.transactionType",transactionType));
+			criteria.add(Restrictions.eq("item.transactionType",transactionType));
 		}
 		String date = formatterExt.format(dateIncomeOutcome);
 		String startFromDate = date + " 00:00:00";
 		String endFromDate = date + " 23:59:59";
 		try {
 			criteria.add(Restrictions.and(Restrictions.ge(
-					"categoryMoney.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
-					"categoryMoney.dateIncomeOutcome", formatter.parse(endFromDate))));
+					"item.dateIncomeOutcome", formatter.parse(startFromDate)), Restrictions.le(
+					"item.dateIncomeOutcome", formatter.parse(endFromDate))));
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("Error convert date: "+ e.toString());
@@ -276,7 +262,7 @@ public class HibernateRKSDAO implements RKSDAO {
 		}
 		
 		criteria.setMaxResults(1);
-		List<CategoryMoney> l = criteria.list();
+		List<Item> l = criteria.list();
 		return CollectionUtils.isNotEmpty(l) ? l.get(0) : null;
 	}
 	

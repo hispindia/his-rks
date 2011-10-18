@@ -46,20 +46,6 @@
 		</td>
 	</tr>
 	<tr>
-		<td valign="top"><spring:message code="rks.category.parent"/></td>
-		<td>
-			<spring:bind path="category.parent">
-			<select name="${status.expression}" id="${status.expression}"  tabindex="20" >
-				<option value=""></option>
-                <c:forEach items="${parents}" var="vparent">
-                    <option value="${vparent.id}" <c:if test="${vparent.id == category.parent.id }">selected</c:if> >${vparent.name}</option>
-                </c:forEach>
-   			</select>
-			<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
-			</spring:bind>
-		</td>
-	</tr>
-	<tr>
 		<td><spring:message code="general.retired" /></td>
 		<td>
 			<spring:bind path="category.retired">

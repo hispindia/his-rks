@@ -37,6 +37,6 @@ public class RKSHeader extends Extension {
 	}
 
 	public String getUrl() {
-		return "module/rks/categoryMoneyList.form";
+		return "module/rks/itemList.form";
 	}
 }

@@ -28,7 +28,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.rks.RKSService;
 import org.openmrs.module.rks.db.RKSDAO;
 import org.openmrs.module.rks.model.Category;
-import org.openmrs.module.rks.model.CategoryMoney;
+import org.openmrs.module.rks.model.Item;
 
 public class RKSServiceImpl  extends BaseOpenmrsService implements  RKSService {
 
@@ -44,16 +44,16 @@ public class RKSServiceImpl  extends BaseOpenmrsService implements  RKSService {
 		/**
 		 * Category
 		 */
-		public List<Category> listCategory(String name,Boolean parent,int min, int max) throws APIException{
-			return dao.listCategory(name,parent, min, max);
+		public List<Category> listCategory(String name, int min, int max) throws APIException{
+			return dao.listCategory(name,  min, max);
 		}
 		
 		public Category saveCategory(Category category) throws APIException{
 			return dao.saveCategory(category);
 		}
 
-		public int countListCategory(String name,Boolean parent)  throws APIException{
-			return dao.countListCategory(name,parent);
+		public int countListCategory(String name )  throws APIException{
+			return dao.countListCategory(name );
 		}
 		
 		public Category getCategoryById(Integer id) throws APIException{
@@ -66,39 +66,39 @@ public class RKSServiceImpl  extends BaseOpenmrsService implements  RKSService {
 		
 		
 		@Override
-		public Category getCategoryByName(String name,Category parent) throws APIException {
+		public Category getCategoryByName(String name ) throws APIException {
 			// TODO Auto-generated method stub
-			return dao.getCategoryByName(name,parent);
+			return dao.getCategoryByName(name );
 		}
 
 		/**
-		 * CategoryMoney
+		 * Item
 		 */
-		public List<CategoryMoney> listCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws APIException{
-			return dao.listCategoryMoney(category ,searchName, transactionType, fromDateIncomeOutcome, toDateIncomeOutcome, min, max);
+		public List<Item> listItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws APIException{
+			return dao.listItem(category ,searchName, transactionType, fromDateIncomeOutcome, toDateIncomeOutcome, min, max);
 		}
 		
-		public CategoryMoney saveCategoryMoney(CategoryMoney categoryMoney) throws APIException{
-			return dao.saveCategoryMoney(categoryMoney);
+		public Item saveItem(Item item) throws APIException{
+			return dao.saveItem(item);
 		}
 
-		public int countListCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws APIException{
-			return dao.countListCategoryMoney(category ,searchName, transactionType, fromDateIncomeOutcome,toDateIncomeOutcome);
+		public int countListItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws APIException{
+			return dao.countListItem(category ,searchName, transactionType, fromDateIncomeOutcome,toDateIncomeOutcome);
 		}
 		
-		public CategoryMoney getCategoryMoneyById(Integer id) throws APIException{
-			return dao.getCategoryMoneyById(id);
+		public Item getItemById(Integer id) throws APIException{
+			return dao.getItemById(id);
 		}
 			
-		public void deleteCategoryMoney(Integer id) throws APIException{
-			dao.deleteCategoryMoney(id);
+		public void deleteItem(Integer id) throws APIException{
+			dao.deleteItem(id);
 		}
 
-		public CategoryMoney getCategoryMoney(Integer subCategoryId,
+		public Item getItem(Integer categoryId,
 				String transactionType, Date dateIncomeOutcome)
 				throws APIException {
 			// TODO Auto-generated method stub
-			return dao.getCategoryMoney(subCategoryId, transactionType, dateIncomeOutcome);
+			return dao.getItem(categoryId, transactionType, dateIncomeOutcome);
 		}
 		
 }

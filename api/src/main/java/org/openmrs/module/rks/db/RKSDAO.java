@@ -25,37 +25,37 @@ import java.util.List;
 
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.rks.model.Category;
-import org.openmrs.module.rks.model.CategoryMoney;
+import org.openmrs.module.rks.model.Item;
 
 public interface RKSDAO {
 
 	/**
 	 * Category
 	 */
-	public List<Category> listCategory(String name,Boolean parent, int min, int max) throws DAOException;
+	public List<Category> listCategory(String name, int min, int max) throws DAOException;
 	
 	public Category saveCategory(Category category) throws DAOException;
 
-	public int countListCategory(String name,Boolean parent)  throws DAOException;
+	public int countListCategory(String name)  throws DAOException;
 	
 	public Category getCategoryById(Integer id) throws DAOException;
 		
 	public void deleteCategory(Integer id) throws DAOException;
 	
-	public Category getCategoryByName(String name,Category parent) throws DAOException;
+	public Category getCategoryByName(String name) throws DAOException;
 	
 	/**
-	 * CategoryMoney
+	 * Item
 	 */
-	public List<CategoryMoney> listCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws DAOException;
+	public List<Item> listItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome,int min, int max) throws DAOException;
 	
-	public CategoryMoney saveCategoryMoney(CategoryMoney categoryMoney) throws DAOException;
+	public Item saveItem(Item item) throws DAOException;
 
-	public int countListCategoryMoney(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws DAOException;
+	public int countListItem(Integer category,String searchName,String transactionType,String fromDateIncomeOutcome,String toDateIncomeOutcome)  throws DAOException;
 	
-	public CategoryMoney getCategoryMoneyById(Integer id) throws DAOException;
+	public Item getItemById(Integer id) throws DAOException;
 	
-	public CategoryMoney getCategoryMoney(Integer subCategoryId, String transactionType,Date dateIncomeOutcome) throws DAOException;
+	public Item getItem(Integer subCategoryId, String transactionType,Date dateIncomeOutcome) throws DAOException;
 		
-	public void deleteCategoryMoney(Integer id) throws DAOException;
+	public void deleteItem(Integer id) throws DAOException;
 }

@@ -5,15 +5,21 @@
 
 <hibernate-mapping package="org.openmrs.module.rks.model">
 
-	<class name="Category" table="rks_category" batch-size="500">
+	<class name="Item" table="rks_item" batch-size="500">
 
 		<id name="id" type="int" column="id" unsaved-value="0">
 				<generator class="native" />
 		</id>
-		<property name="name" column="name" />
+		<property name="transactionType" column="transaction_type" />
 		<property name="description" column="description" length="500" />
+		
+		<property name="dateIncomeOutcome" column="date_income_outcome" />
+		<property name="amount" column="amount" />
 		<property name="createdOn" column="created_on"  />
 		<property name="createdBy" column="created_by" length="255" />
-		<property name="retired" column="retired"  /> 
+		<property name="retired" column="retired"  />
+		<many-to-one name="category" class="org.openmrs.module.rks.model.Category"
+	        column="category_id"  lazy="false" />	 
+	     
 	</class>
 </hibernate-mapping>

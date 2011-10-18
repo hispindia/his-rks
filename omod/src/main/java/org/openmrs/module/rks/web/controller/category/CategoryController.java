@@ -64,19 +64,7 @@ Log log = LogFactory.getLog(this.getClass());
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Category.class, new CategoryPropertyEditor());
 	}
-	@ModelAttribute("parents")
-	public List<Category> parents( HttpServletRequest request){
-		RKSService rksService =Context.getService(RKSService.class);
-		List<Category> parents = rksService.listCategory("", true, 0, 0);
-		if(CollectionUtils.isNotEmpty(parents)){
-			Integer categoryId = NumberUtils.toInt(request.getParameter("categoryId"));
-			Category category = rksService.getCategoryById(categoryId);
-			if(category != null){
-				parents.remove(category);
-			}
-		}
-		return parents;
-	}
+	
 	@RequestMapping(method = RequestMethod.POST)
 	public String onSubmit(@ModelAttribute("category") Category category, BindingResult bindingResult, HttpServletRequest request, SessionStatus status) {
 		new CategoryValidator().validate(category, bindingResult);

@@ -18,47 +18,58 @@
  *
  **/
 
-package org.openmrs.module.rks.web.controller.category;
+package org.openmrs.module.rks.web.controller.item;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.rks.RKSService;
-import org.openmrs.module.rks.model.Category;
+import org.openmrs.module.rks.model.Item;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-public class CategoryValidator implements  Validator {
+/**
+ * 
+ * <p> Class: ItemValidator </p>
+ * <p> Package: org.openmrs.module.rks.web.controller.item </p> 
+ * <p> Author: Nguyen manh chuyen(Email: chuyennmth@gmail.com) </p>
+ * <p> Update by: Nguyen manh chuyen </p>
+ * <p> Version: $1.0 </p>
+ * <p> Create date: Aug 10, 2011 9:12:21 AM </p>
+ * <p> Update date: Aug 10, 2011 9:12:21 AM </p>
+ *
+ */
+public class ItemValidator implements  Validator {
 
 	/**
      * @see org.springframework.validation.Validator#supports(java.lang.Class)
      */
     public boolean supports(Class clazz) {
-    	return Category.class.equals(clazz);
+    	return Item.class.equals(clazz);
     }
 
 	/**
      * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
      */
     public void validate(Object command, Errors error) {
-    	Category category = (Category) command;
+    	Item item = (Item) command;
     	
-    	if( StringUtils.isBlank(category.getName())){
-    		error.reject("rks.category.name.required");
+    	if( item.getCategory() == null){
+    		error.reject("rks.item.category.required");
     	}
-    	
-    	RKSService rksService = Context.getService(RKSService.class);
-    	Category storeE = rksService.getCategoryByName(category.getName() );
-    	if(category.getId() != null){
-    		if(storeE != null && storeE.getId().intValue() != category.getId().intValue()){
-    			error.reject("rks.category.name.existed");
+    	if( StringUtils.isBlank(item.getTransactionType() )){
+    		error.reject("rks.item.transactionType.required");
+    	}
+    	RKSService inventoryService = Context.getService(RKSService.class);
+    	Item itemE = inventoryService.getItem(item.getCategory().getId(), item.getTransactionType(), item.getDateIncomeOutcome());
+    	if(item.getId() != null){
+    		if(itemE != null && itemE.getId().intValue() != item.getId().intValue()){
+    			error.reject("rks.item.existed");
     		}
     	}else{
-    		if(storeE != null){
-    	    		error.reject("rks.category.name.existed");
+    		if(itemE != null){
+    	    		error.reject("rks.item.existed");
     		}
     	}
-    	
-    	
     	
     	
     }

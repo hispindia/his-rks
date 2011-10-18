@@ -106,7 +106,7 @@
 	
 	<mappingFiles>
 		Category.hbm.xml
-		CategoryMoney.hbm.xml
+		Item.hbm.xml
     </mappingFiles>
 </module>
 

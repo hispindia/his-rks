@@ -42,16 +42,16 @@ var CHECK =
 			}
 		});
 	},
-	categoryMoneyPage : function()
+	itemPage : function()
 	{
 		jQuery('.date-pick').datepicker({yearRange:'c-30:c+30', dateFormat: 'dd/mm/yy', changeMonth: true, changeYear: true});
-		var validator = jQuery("#categoryMoneyForm").validate(
+		var validator = jQuery("#itemForm").validate(
 		{
 			event : "blur",
 			rules : 
 			{
 			
-				"subCategory" : { required : true},
+				"category" : { required : true},
 				"transactionType" : { required : true},
 				"dateIncomeOutcome" : { required : true},
 				"amount" : { required : true,number: true}
@@ -59,7 +59,7 @@ var CHECK =
 			}
 		});
 	},
-	categoryMoneyListPage : function()
+	itemListPage : function()
 	{
 		jQuery('.date-pick').datepicker({yearRange:'c-30:c+30', dateFormat: 'dd/mm/yy', changeMonth: true, changeYear: true});
 		

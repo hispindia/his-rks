@@ -82,11 +82,11 @@ public class CategoryListController {
 			
 			RKSService rksService = Context.getService(RKSService.class);
 			
-			int total = rksService.countListCategory(name,null);
+			int total = rksService.countListCategory(name );
 			
 			PagingUtil pagingUtil = new PagingUtil( RequestUtil.getCurrentLink(request) , pageSize, currentPage, total );
 			
-			List<Category> categories = rksService.listCategory(name,null, pagingUtil.getStartPos(), pagingUtil.getPageSize());
+			List<Category> categories = rksService.listCategory(name , pagingUtil.getStartPos(), pagingUtil.getPageSize());
 			
 			model.put("categories", categories );
 			
